@@ -9,3 +9,6 @@ The [On Cinema universe](https://en.wikipedia.org/wiki/On_Cinema) contains many 
 The HEI api is an effort to create a new timeline which will eventually encapsulate every bit of media from On Cinema.
 
 A separate repo will be established and linked to that provides a front end view, but starting with the api seems like the most manageable immediate task.
+
+## Related repos
+[HEI scraper](https://github.com/samcolson4/hei_scraper)
