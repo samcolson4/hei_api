@@ -44,6 +44,10 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Binding.pry
+  gem 'pry'
+  gem 'pry-rails'
 end
 
-
+gem "jsonapi-serializer", "~> 2.2"
