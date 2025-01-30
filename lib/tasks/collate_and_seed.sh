@@ -48,3 +48,6 @@ echo "✅ Combined JSON saved to $OUTPUT_FILE"
 
 # Run the rake task with the timestamped file
 rake db:generate_seeds JSON_FILE="$OUTPUT_FILE"
+
+# Seed the db
+rails db:seed
