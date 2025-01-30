@@ -6,8 +6,13 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-# Define the output file
-OUTPUT_FILE="combined.json"
+# Generate a timestamp
+TIMESTAMP=$(date +"%Y_%m_%d_%H_%M_%S")
+OUTPUT_DIR="lib/seed_json"
+OUTPUT_FILE="${OUTPUT_DIR}/combined_seed_data_${TIMESTAMP}.json"
+
+# Ensure the directory exists
+mkdir -p "$OUTPUT_DIR"
 
 # Start the JSON array
 echo "[" > "$OUTPUT_FILE"
@@ -19,23 +24,27 @@ for file in "$@"; do
         continue
     fi
 
-    # Read JSON array and remove surrounding brackets
-    CONTENT=$(jq -c '.[]' "$file")
-    if [ -n "$CONTENT" ]; then
+    # Extract JSON objects from the array
+    while read -r line; do
         if [ "$FIRST" = true ]; then
             FIRST=false
         else
-            echo "," >> "$OUTPUT_FILE"
+            echo "," >> "$OUTPUT_FILE"  # ✅ Add a comma before new objects
         fi
-        echo "$CONTENT" | sed 's/^/    /' >> "$OUTPUT_FILE"
-    fi
-
+        echo "$line" >> "$OUTPUT_FILE"
+    done < <(jq -c '.[]' "$file")
 done
 
 # End the JSON array
 echo "]" >> "$OUTPUT_FILE"
 
-echo "Combined JSON saved to $OUTPUT_FILE"
+# Validate the final JSON
+if ! jq empty "$OUTPUT_FILE"; then
+    echo "❌ Error: Combined JSON is invalid!"
+    exit 1
+fi
 
-# Run the rake task
+echo "✅ Combined JSON saved to $OUTPUT_FILE"
+
+# Run the rake task with the timestamped file
 rake db:generate_seeds JSON_FILE="$OUTPUT_FILE"
